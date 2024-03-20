@@ -54,32 +54,26 @@ spec:
       {{- if eq (.Values.config).AuthenticationMethod "External" }}
         - name: config
           image: pipelinecomponents/xmllint:0.8.1
+          securityContext:
+            runAsUser: 1000 # Find a better way to preserve file ownership of config.xml.
+            runAsGroup: 1000
           command:
             - /bin/sh
             - -c
             - |
               if ! [ -e "$file" ] ; then
-                  echo "No config.xml found, creating file."
+                  echo "No config.xml found, creating minimal config.xml."
                   cat <<EOF >/config/config.xml
               <Config>
                 <BindAddress>*</BindAddress>
                 <Port>8989</Port>
                 <SslPort>9898</SslPort>
                 <EnableSsl>False</EnableSsl>
-                <LaunchBrowser>True</LaunchBrowser>
-                <ApiKey></ApiKey>
-                <AuthenticationMethod>External</AuthenticationMethod>
-                <AuthenticationRequired>Enabled</AuthenticationRequired>
-                <Branch>main</Branch>
-                <LogLevel>info</LogLevel>
-                <SslCertPath></SslCertPath>
-                <SslCertPassword></SslCertPassword>
-                <UrlBase></UrlBase>
-                <InstanceName>Sonarr</InstanceName>
-                <UpdateMechanism>Docker</UpdateMechanism>
+                <AuthenticationMethod>None</AuthenticationMethod>
               </Config>
               EOF
               fi
+              
               xmllint --shell /config/config.xml << EOF
               cd /Config/AuthenticationMethod
               set External

@@ -63,7 +63,7 @@ storage:
     path: /home/trygve/config/sonarr
 
 config:
-  AuthenticationMethod: None
+  AuthenticationMethod: External
 
 resources: {}
   # We usually recommend not to specify default resources and to leave this as a conscious
