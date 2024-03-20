@@ -61,8 +61,8 @@ spec:
             - /bin/sh
             - -c
             - |
-              if ! [ -e "$file" ] ; then
-                  echo "No config.xml found, creating minimal config.xml."
+              if ! [ -e "/config/config.xml" ] ; then
+                  echo "No config.xml found, creating minimal config."
                   cat <<EOF >/config/config.xml
               <Config>
                 <BindAddress>*</BindAddress>
