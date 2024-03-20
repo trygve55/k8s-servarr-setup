@@ -6,7 +6,7 @@ image:
   repository: binhex/arch-qbittorrentvpn
   pullPolicy: IfNotPresent
   # Overrides the image tag whose default is the chart appVersion.
-  tag: ""
+  tag: "4.6.3-1-02"
 
 imagePullSecrets: []
 nameOverride: ""
@@ -36,7 +36,7 @@ securityContext: {}
 
 service:
   type: ClusterIP
-  port: 80
+  port: 8080
 
 ingress:
   enabled: true
@@ -53,6 +53,14 @@ ingress:
   #  - secretName: chart-example-tls
   #    hosts:
   #      - chart-example.local
+
+storage:
+  data:
+    type: hostPath
+    path: /home/trygve/media/data
+  config:
+    type: hostPath
+    path: /home/trygve/config/qbittorrent
 
 resources: {}
   # We usually recommend not to specify default resources and to leave this as a conscious

@@ -30,6 +30,9 @@ spec:
             {{- toYaml .Values.securityContext | nindent 12 }}
           image: "{{ .Values.image.repository }}:{{ .Values.image.tag | default .Chart.AppVersion }}"
           imagePullPolicy: {{ .Values.image.pullPolicy }}
+          env:
+          - name: VPN_ENABLED
+            value: "no"
           ports:
             - name: http
               containerPort: {{ .Values.service.port }}
@@ -44,6 +47,55 @@ spec:
               port: http
           resources:
             {{- toYaml .Values.resources | nindent 12 }}
+          volumeMounts:
+            - mountPath: /data
+              name: data
+            - mountPath: /config
+              name: config
+      initContainers:
+        - name: config
+          image: busybox
+          securityContext:
+            runAsUser: 99 # Find a better way to preserve file ownership of config.xml.
+            runAsGroup: 1000
+          command:
+            - /bin/sh
+            - -c
+            - |
+              if ! [ -e "/config/qBittorrent/config/qBittorrent.conf" ] ; then
+                  echo "No /config/qBittorrent/config/qBittorrent.conf found, creating minimal config."
+                  ls -la /config
+                  mkdir --help
+                  mkdir -p /config/qBittorrent/config
+                  cat <<EOF >/config/qBittorrent/config/qBittorrent.conf
+              [BitTorrent]
+              Session\DefaultSavePath=/data
+
+              [Preferences]
+              WebUI\AuthSubnetWhitelistEnabled=true
+              WebUI\AuthSubnetWhitelist=0.0.0.0/0
+              EOF
+              fi
+          volumeMounts:
+            - mountPath: /config
+              name: config
+      volumes:
+        {{- if eq .Values.storage.data.type "hostPath" }}
+        - name: data
+          hostPath:
+            path: {{ required "You need to set a path to the data directory! storage.data.path" .Values.storage.data.path }} # directory location on host
+            type: Directory # this field is optional
+        {{- else }}
+          {{ fail "A valid .Values.storage.data.type needs to be set!"}}
+        {{- end }}
+        {{- if eq .Values.storage.config.type "hostPath" }}
+        - name: config
+          hostPath:
+            path: {{ required "You need to set a path to the config directory! storage.config.path" .Values.storage.config.path }} # directory location on host
+            type: Directory # this field is optional
+        {{- else }}
+          {{ fail "A valid .Values.storage.config.type needs to be set!"}}
+        {{- end }}
       {{- with .Values.nodeSelector }}
       nodeSelector:
         {{- toYaml . | nindent 8 }}
