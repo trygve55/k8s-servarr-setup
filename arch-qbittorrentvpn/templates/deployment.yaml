@@ -33,6 +33,10 @@ spec:
           env:
           - name: VPN_ENABLED
             value: "no"
+          - name: PUID
+            value: "1000"
+          - name: GUID
+            value: "1000"
           ports:
             - name: http
               containerPort: {{ .Values.service.port }}
@@ -56,7 +60,7 @@ spec:
         - name: config
           image: busybox
           securityContext:
-            runAsUser: 99 # Find a better way to preserve file ownership of config.xml.
+            runAsUser: 1000 # Find a better way to preserve file ownership of config.xml.
             runAsGroup: 1000
           command:
             - /bin/sh
@@ -69,7 +73,7 @@ spec:
                   mkdir -p /config/qBittorrent/config
                   cat <<EOF >/config/qBittorrent/config/qBittorrent.conf
               [BitTorrent]
-              Session\DefaultSavePath=/data
+              Session\DefaultSavePath=/data/Downloads
 
               [Preferences]
               WebUI\AuthSubnetWhitelistEnabled=true
