@@ -1,9 +1,9 @@
-# Default values for prowlarr.
+# Default values for jellyfin.
 # This is a YAML-formatted file.
 # Declare variables to be passed into your templates.
 
 image:
-  repository: ghcr.io/hotio/prowlarr
+  repository: ghcr.io/hotio/jellyfin
   pullPolicy: IfNotPresent
   # Overrides the image tag whose default is the chart appVersion.
   tag: "release"
@@ -36,7 +36,7 @@ securityContext: {}
 
 service:
   type: ClusterIP
-  port: 9696
+  port: 8096
 
 ingress:
   enabled: true
@@ -45,7 +45,7 @@ ingress:
     # kubernetes.io/ingress.class: nginx
     # kubernetes.io/tls-acme: "true"
   hosts:
-    - host: prowlarr.local
+    - host: jellyfin.local
       paths:
         - path: /
           pathType: Prefix
@@ -55,9 +55,12 @@ ingress:
   #      - chart-example.local
 
 storage:
+  data:
+    type: hostPath
+    path: /mount/hdd0/data
   config:
     type: hostPath
-    path: /home/trygve/k8s-data/config/prowlarr
+    path: /home/trygve/k8s-data/config/jellyfin
 
 config:
   AuthenticationMethod: External

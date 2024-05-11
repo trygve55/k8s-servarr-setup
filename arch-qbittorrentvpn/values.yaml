@@ -57,10 +57,10 @@ ingress:
 storage:
   data:
     type: hostPath
-    path: /home/trygve/media/data
+    path: /mount/hdd0/data
   config:
     type: hostPath
-    path: /home/trygve/config/qbittorrent
+    path: /home/trygve/k8s-data/config/qbittorrent
 
 resources: {}
   # We usually recommend not to specify default resources and to leave this as a conscious
