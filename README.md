@@ -6,12 +6,12 @@ helm install qbittorrent k8s-at-home/qbittorrent --version 13.4.2
 ```
 
 ```shell
-sudo mkdir /mount/hdd0/data
+sudo mkdir -p /mount/hdd0/data
 sudo chown trygve:trygve /mount/hdd0/data
 mkdir -p /mount/hdd0/data/media/Movies
 mkdir /mount/hdd0/data/media/Tv-Series
 mkdir /mount/hdd0/data/media/Music
-mkdir /mount/hdd0/data/downloads
+mkdir /mount/hdd0/data/Downloads
 
 mkdir -p /home/trygve/k8s-data/config/qbittorrent
 helm install qbittorrent arch-qbittorrentvpn/ -n media --create-namespace
@@ -19,27 +19,134 @@ helm install qbittorrent arch-qbittorrentvpn/ -n media --create-namespace
 mkdir -p /home/trygve/k8s-data/config/sonarr
 helm install sonarr sonarr -n media
 
+mkdir -p /home/trygve/k8s-data/config/radarr
+helm install radarr radarr -n media
+
+helm repo add k8s-home-lab https://k8s-home-lab.github.io/helm-charts/
+helm repo update
+helm install flaresolverr k8s-home-lab/flaresolverr -n media
+
 mkdir -p /home/trygve/k8s-data/config/prowlarr
 helm install prowlarr prowlarr -n media
 
+mkdir -p /home/trygve/k8s-data/config/bazarr
+helm install bazarr bazarr -n media
+
 mkdir -p /home/trygve/k8s-data/config/jellyfin
 helm install jellyfin jellyfin -n media
+
+mkdir -p /home/trygve/k8s-data/config/jellyseerr
+helm install jellyseerr jellyseerr -n media
+
+
 ```
 
 ### Sonarr setup:
-Add download client: 
-url: qbittorrent-arch-qbittorrentvpn.media.svc
+Settings -> Download Clients <br>
+Add download client: <br>
+Name: `qBittorent` <br>
+Host: `qbittorrent-arch-qbittorrentvpn` <br>
 
-Settings -> Media Management -> Root Folders
-Add /data/media/Tv-Series/
+Settings -> Media Management -> Episode Naming <br>
+Series Folder Format: `{Series TitleYear}` <br>
+Season Folder Format: `{Series TitleYear} Season {season}` <br>
+
+Settings -> Media Management -> Root Folders <br>
+Add `/data/media/Tv-Series/`
+
+### Radarr setup:
+Settings -> Download Clients <br>
+Add download client: <br>
+Name: `qBittorent` <br>
+Host: `qbittorrent-arch-qbittorrentvpn`
+
+Settings -> Media Management -> Root Folders <br>
+Add `/data/media/Movies/`
 
 ### Prowlarr setup
-Add indexers
+Add FlareSolverr <br>
+Settings -> Indexer Proxies -> Add <br>
+Name: `FlareSolverr` <br>
+Tags: `flare` <br>
+Host: `http://flaresolverr:8191/`
+
+Add indexers <br>
+Some indexers will indicate that they need FlareSolverr, add the `flare` tag to those indexers.
 
 Settings -> Apps
-Add sonarr:
-Prowlarr Server: http://prowlarr:9696
-Sonarr Server: http://sonarr:8989
+Add sonarr: <br>
+Prowlarr Server: `http://prowlarr:9696` <br>
+Sonarr Server: `http://sonarr:8989` <br>
 API Key: Copy API key from Sonarr interface
 
+Add radarr: <br>
+Prowlarr Server: `http://prowlarr:9696` <br>
+Radarr Server: `http://radarr:7878` <br>
+API Key: Copy API key from Radarr interface
+
+### Bazarr setup:
+Settings -> Languages -> Subtitles Language <br>
+Languages Filter: Add your preferred languages
+
+Settings -> Languages -> Languages Profile <br>
+Add New Profile <br>
+Name: `default` <br>
+Add your languages <br>
+Save
+
+Settings -> Languages -> Default Language Profiles For Newly Added Shows <br>
+Enable for Series and Movies. <br>
+Select the profile `default` for both
+
+Settings -> Providers <br>
+Add your subtitle providers.
+
+Settings -> Sonarr <br>
+Address: `sonarr` <br>
+API Key: Copy API key from Sonarr interface
+
+Settings -> Radarr <br>
+Address: `radarr` <br>
+API Key: Copy API key from Radarr interface
+
 ### Jellyfin
+Create admin user.
+
+Add Movies, Tv-series and Music folder.
+
+### Jellyseerr
+
+Choose server type: <br>
+Choose Jellyfin as server type
+
+Sign in: <br>
+Add Jellyfin host: `jellyfin` <br>
+External URL: `http://jellyfin.local` <br>
+Login with your username and password
+
+Configure Media Server: <br>
+Todo
+
+Configure services: <br>
+Add Radarr <br>
+Default Server: Yes
+Server Name: `radarr` <br>
+Hostname or IP Address: `radarr` <br>
+API Key: Copy API key from Radarr interface
+Quality profile: Select your preferred quality <br>
+Root folder: `/data/media/Movies` <br>
+External URL: `http://radarr.local` <br>
+Enable scan: yes <br>
+
+Add Sonarr <br>
+Default Server: Yes
+Server Name: `sonarr` <br>
+Hostname or IP Address: `sonarr` <br>
+API Key: Copy API key from Sonarr interface
+Quality profile: Select your preferred quality <br>
+Root folder: `/data/media/Tv-Series` <br>
+Season Folders: yes <br>
+External URL: `http://sonarr.local` <br>
+Enable scan: yes <br>
+
+Finish setup!
