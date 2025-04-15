@@ -68,6 +68,7 @@ spec:
                 <SslPort>6969</SslPort>
                 <EnableSsl>False</EnableSsl>
                 <AuthenticationMethod>None</AuthenticationMethod>
+                <UrlBase>prowlarr</UrlBase>
               </Config>
               EOF
               fi

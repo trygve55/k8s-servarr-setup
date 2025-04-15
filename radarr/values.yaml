@@ -41,13 +41,14 @@ service:
 ingress:
   enabled: true
   className: public
-  annotations: {}
-    # kubernetes.io/ingress.class: nginx
-    # kubernetes.io/tls-acme: "true"
+  annotations:
+    nginx.ingress.kubernetes.io/auth-type: basic
+    nginx.ingress.kubernetes.io/auth-secret: media/basic-auth
+    nginx.ingress.kubernetes.io/auth-realm: 'Authentication Required'
   hosts:
-    - host: radarr.local
+    - host: admin.local
       paths:
-        - path: /
+        - path: /radarr
           pathType: Prefix
   tls: []
   #  - secretName: chart-example-tls

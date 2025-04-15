@@ -6,6 +6,19 @@ helm install qbittorrent k8s-at-home/qbittorrent --version 13.4.2
 ```
 
 ```shell
+kubectl create namespace media
+```
+
+### Add common authentication
+This will enable us to login to all of our services once with the same username and password.
+```shell
+sudo apt install apache2-utils  
+htpasswd -c ./basic-auth admin
+
+kubectl create secret generic basic-auth --from-file=auth=basic-auth --namespace media
+```
+
+```shell
 sudo mkdir -p /mount/hdd0/data
 sudo chown trygve:trygve /mount/hdd0/data
 mkdir -p /mount/hdd0/data/media/Movies
@@ -14,7 +27,7 @@ mkdir /mount/hdd0/data/media/Music
 mkdir /mount/hdd0/data/Downloads
 
 mkdir -p /home/trygve/k8s-data/config/qbittorrent
-helm install qbittorrent arch-qbittorrentvpn/ -n media --create-namespace
+helm install qbittorrent arch-qbittorrentvpn/ -n media
 
 mkdir -p /home/trygve/k8s-data/config/sonarr
 helm install sonarr sonarr -n media
@@ -37,8 +50,6 @@ helm install jellyfin jellyfin -n media
 
 mkdir -p /home/trygve/k8s-data/config/jellyseerr
 helm install jellyseerr jellyseerr -n media
-
-
 ```
 
 ### Sonarr setup:

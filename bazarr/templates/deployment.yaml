@@ -70,6 +70,7 @@ spec:
                 <SslPort>9898</SslPort>
                 <EnableSsl>False</EnableSsl>
                 <AuthenticationMethod>None</AuthenticationMethod>
+                <UrlBase>bazarr</UrlBase>
               </Config>
               EOF
               fi
