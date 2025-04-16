@@ -50,6 +50,10 @@ helm install jellyfin jellyfin -n media
 
 mkdir -p /home/trygve/k8s-data/config/jellyseerr
 helm install jellyseerr jellyseerr -n media
+
+helm repo add byjg https://opensource.byjg.com/helm
+helm repo update byjg    
+helm install staticlinkpage byjg/static-httpserver --values static-page-values.yaml
 ```
 
 ### Sonarr setup:
