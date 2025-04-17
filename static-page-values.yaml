@@ -3,16 +3,16 @@ ingress:
   className: public
   annotations:
     kubernetes.io/ingress.class: public
-  hosts: [admin.local]
+  hosts: [media.local]
 
 parameters:
   htmlTitle: "Serverr admin pages"
   title: "Serverr admin pages"
   message: "
-    <a href='http://jellyfin.local'><img width='50' height='50' src='http://jellyfin.local/web/baba78f2a106d9baee83.png'> Jellyfin</a> <br>
-    <a href='http://jellyseerr.local'><img width='50' height='50' src='http://jellyseerr.local/logo_full.svg#svgView(viewBox(0,0,96,96))'> Jellyseerr</a> <br>
+    <a href='jellyfin'><img width='50' height='50' src='jellyfin/web/baba78f2a106d9baee83.png'> Jellyfin</a> <br>
+    <a href='jellyseerr'><img width='50' height='50' src='jellyseerr/logo_full.svg#svgView(viewBox(0,0,96,96))'> Jellyseerr</a> <br>
     <a href='sonarr'><img width='50' height='50' src='sonarr/Content/Images/logo.svg'> Sonarr</a> <br>
     <a href='radarr'><img width='50' height='50' src='radarr/Content/Images/logo.png'> Radarr</a> <br>
     <a href='prowlarr'><img width='50' height='50' src='prowlarr/Content/Images/logo.png'> Prowlarr</a> <br>
     <a href='bazarr'><img width='50' height='50' src='bazarr/images/logo64.png'> Bazarr</a> <br>
-    <a href='qbittorrent'><img width='50' height='50' src='qbittorrent/images/qbittorrent-tray.svg'> qBittorrent</a>"
+    <a href='qbittorrent/'><img width='50' height='50' src='qbittorrent/images/qbittorrent-tray.svg'> qBittorrent</a>"

@@ -43,10 +43,10 @@ ingress:
   className: public
   annotations:
     nginx.ingress.kubernetes.io/auth-type: basic
-    nginx.ingress.kubernetes.io/auth-secret: media/basic-auth
+    nginx.ingress.kubernetes.io/auth-secret: basic-auth
     nginx.ingress.kubernetes.io/auth-realm: 'Authentication Required'
   hosts:
-    - host: admin.local
+    - host: media.local
       paths:
         - path: /prowlarr
           pathType: Prefix

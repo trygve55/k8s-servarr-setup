@@ -42,12 +42,10 @@ ingress:
   enabled: true
   className: public
   annotations: {}
-    # kubernetes.io/ingress.class: nginx
-    # kubernetes.io/tls-acme: "true"
   hosts:
-    - host: jellyfin.local
+    - host: media.local
       paths:
-        - path: /
+        - path: /jellyfin
           pathType: Prefix
   tls: []
   #  - secretName: chart-example-tls

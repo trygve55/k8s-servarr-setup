@@ -48,7 +48,7 @@ ingress:
     nginx.ingress.kubernetes.io/use-regex: "true"
     nginx.ingress.kubernetes.io/rewrite-target: /$1
   hosts:
-    - host: admin.local
+    - host: media.local
       paths:
         - path: /qbittorrent/(.*)
           pathType: ImplementationSpecific

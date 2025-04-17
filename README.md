@@ -53,7 +53,9 @@ helm install jellyseerr jellyseerr -n media
 
 helm repo add byjg https://opensource.byjg.com/helm
 helm repo update byjg    
-helm install staticlinkpage byjg/static-httpserver --values static-page-values.yaml
+helm upgrade --install staticpage byjg/static-httpserver \
+  --values static-page-values.yaml \
+  --namespace media
 ```
 
 ### Sonarr setup:
@@ -130,38 +132,44 @@ Create admin user.
 Add Movies, Tv-series and Music folder.
 
 ### Jellyseerr
+Url: http://media.local/jellyseerr/setup <br>
 
-Choose server type: <br>
-Choose Jellyfin as server type
+#### Choose server type:
+Choose Jellyfin as server type.
 
-Sign in: <br>
-Add Jellyfin host: `jellyfin` <br>
-External URL: `http://jellyfin.local` <br>
-Login with your username and password
+#### Sign In
+Jellyfin URL: `jellyfin` <br>
+URL Base: `/jellyfin` <br>
+Sign in with the username and password created for Jellyfin. <br>
 
-Configure Media Server: <br>
-Todo
+#### Configure Media Server
+Press the `Sync Libraries` button and enable your Jellyfin libraries.
+Press the `Start Scan` button.
+External URL: `http://media.local/jellyfin` <br>
+Press the `Save Changes` button.
 
-Configure services: <br>
-Add Radarr <br>
-Default Server: Yes
+#### Configure services:
+###### Add Radarr <br>
+Default Server: `Yes` <br>
 Server Name: `radarr` <br>
 Hostname or IP Address: `radarr` <br>
-API Key: Copy API key from Radarr interface
+API Key: Copy API key from Radarr interface <br>
+URL Base: `/radarr` <br>
 Quality profile: Select your preferred quality <br>
 Root folder: `/data/media/Movies` <br>
-External URL: `http://radarr.local` <br>
-Enable scan: yes <br>
+External URL: `http://media.local/radarr` <br>
+Enable scan: `yes` <br>
 
-Add Sonarr <br>
-Default Server: Yes
+###### Add Sonarr <br>
+Default Server: `Yes` <br>
 Server Name: `sonarr` <br>
 Hostname or IP Address: `sonarr` <br>
-API Key: Copy API key from Sonarr interface
+API Key: Copy API key from Sonarr interface <br>
+URL Base: `/sonarr` <br>
 Quality profile: Select your preferred quality <br>
 Root folder: `/data/media/Tv-Series` <br>
-Season Folders: yes <br>
-External URL: `http://sonarr.local` <br>
-Enable scan: yes <br>
+Season Folders: `yes` <br>
+External URL: `http://media.local/sonarr` <br>
+Enable scan: `yes` <br>
 
 Finish setup!

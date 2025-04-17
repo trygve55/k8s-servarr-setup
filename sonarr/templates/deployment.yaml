@@ -51,7 +51,6 @@ spec:
             - mountPath: /config
               name: config
       initContainers:
-      {{- if eq (.Values.config).AuthenticationMethod "External" }}
         - name: config
           image: pipelinecomponents/xmllint:0.8.1
           securityContext:
@@ -70,20 +69,27 @@ spec:
                 <SslPort>9898</SslPort>
                 <EnableSsl>False</EnableSsl>
                 <AuthenticationMethod>None</AuthenticationMethod>
-                <UrlBase>sonarr</UrlBase>
+                <UrlBase></UrlBase>
               </Config>
               EOF
               fi
               
+              {{- if eq (.Values.config).AuthenticationMethod "External" }}
               xmllint --shell /config/config.xml << EOF
               cd /Config/AuthenticationMethod
               set External
               save
               EOF
+              {{- end }}
+              
+              xmllint --shell /config/config.xml << EOF
+              cd /Config/UrlBase
+              set sonarr
+              save
+              EOF
           volumeMounts:
             - mountPath: /config
               name: config
-      {{- end }}
       volumes:
         {{- if eq .Values.storage.data.type "hostPath" }}
         - name: data
