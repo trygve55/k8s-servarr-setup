@@ -12,6 +12,9 @@ imagePullSecrets: []
 nameOverride: ""
 fullnameOverride: ""
 
+authenticationMethod: External
+baseUrl: "/prowlarr"
+
 serviceAccount:
   # Specifies whether a service account should be created
   create: true
@@ -59,9 +62,6 @@ storage:
   config:
     type: hostPath
     path: /home/trygve/k8s-data/config/prowlarr
-
-config:
-  AuthenticationMethod: External
 
 resources: {}
   # We usually recommend not to specify default resources and to leave this as a conscious

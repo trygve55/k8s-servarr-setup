@@ -74,7 +74,7 @@ spec:
               EOF
               fi
               
-              {{- if eq (.Values.config).AuthenticationMethod "External" }}
+              {{- if eq .Values.authenticationMethod "External" }}
               xmllint --shell /config/config.xml << EOF
               cd /Config/AuthenticationMethod
               set External
@@ -84,7 +84,7 @@ spec:
               
               xmllint --shell /config/config.xml << EOF
               cd /Config/UrlBase
-              set sonarr
+              set {{ .Values.baseUrl }}
               save
               EOF
           volumeMounts:

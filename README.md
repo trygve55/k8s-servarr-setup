@@ -13,7 +13,7 @@ kubectl create namespace media
 This will enable us to login to all of our services once with the same username and password.
 ```shell
 sudo apt install apache2-utils  
-htpasswd -c ./basic-auth admin
+htpasswd -c ./basic-auth <your-admin-username>
 
 kubectl create secret generic basic-auth --from-file=auth=basic-auth --namespace media
 ```

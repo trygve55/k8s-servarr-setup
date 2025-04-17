@@ -12,6 +12,8 @@ imagePullSecrets: []
 nameOverride: ""
 fullnameOverride: ""
 
+baseUrl: "/jellyseerr"
+
 serviceAccount:
   # Specifies whether a service account should be created
   create: true
@@ -44,6 +46,7 @@ ingress:
   annotations:
     nginx.ingress.kubernetes.io/use-regex: "true"
     nginx.ingress.kubernetes.io/rewrite-target: /$1
+    nginx.ingress.kubernetes.io/proxy-redirect-from: default
     nginx.ingress.kubernetes.io/configuration-snippet: |
       set $app 'jellyseerr';
       
@@ -56,7 +59,6 @@ ingress:
       sub_filter 'href="/setup"' 'href="/jellyseerr/setup"';
       sub_filter 'href:"/"' 'href:"/jellyseerr"';
       sub_filter '\/_next' '\/$app\/_next';
-      sub_filter '/login' '/$app/login';
       sub_filter '/_next' '/$app/_next';
       sub_filter '/api/v1' '/$app/api/v1';
       sub_filter '/login/plex/loading' '/$app/login/plex/loading';
@@ -85,9 +87,6 @@ storage:
   config:
     type: hostPath
     path: /home/trygve/k8s-data/config/jellyseerr
-
-config:
-  AuthenticationMethod: External
 
 resources: {}
   # We usually recommend not to specify default resources and to leave this as a conscious
