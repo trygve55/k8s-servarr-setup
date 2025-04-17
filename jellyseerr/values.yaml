@@ -46,9 +46,14 @@ ingress:
   annotations:
     nginx.ingress.kubernetes.io/use-regex: "true"
     nginx.ingress.kubernetes.io/rewrite-target: /$1
-    nginx.ingress.kubernetes.io/proxy-redirect-from: default
+    nginx.ingress.kubernetes.io/proxy-redirect-from: /
+    nginx.ingress.kubernetes.io/proxy-redirect-to: /
     nginx.ingress.kubernetes.io/configuration-snippet: |
       set $app 'jellyseerr';
+      
+      proxy_redirect ^ /jellyseerr;
+      proxy_redirect /setup /jellyseerr/setup;
+      proxy_redirect /login /jellyseerr/login;
       
       # Sub filters to replace hardcoded paths
       proxy_set_header Accept-Encoding "";
