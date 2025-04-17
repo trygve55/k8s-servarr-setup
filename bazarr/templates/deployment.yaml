@@ -52,7 +52,7 @@ spec:
               name: config
       initContainers:
         - name: config
-          image: pipelinecomponents/xmllint:0.8.1
+          image: mikefarah/yq:4.35.2
           securityContext:
             runAsUser: 1000 # Find a better way to preserve file ownership of config.xml.
             runAsGroup: 1000
@@ -60,33 +60,15 @@ spec:
             - /bin/sh
             - -c
             - |
-              if ! [ -e "/config/config.xml" ] ; then
-                  echo "No config.xml found, creating minimal config."
-                  cat <<EOF >/config/config.xml
-              <Config>
-                <BindAddress>*</BindAddress>
-                <Port>6767</Port>
-                <SslPort>9898</SslPort>
-                <EnableSsl>False</EnableSsl>
-                <AuthenticationMethod>None</AuthenticationMethod>
-                <UrlBase></UrlBase>
-              </Config>
+              if ! [ -e "/config/config/config.yaml" ] ; then
+                  echo "No config.yaml found, creating minimal config."
+                  cat <<EOF >/config/config/config.yaml
+              general:
+                base_url: /bazarr
               EOF
               fi
               
-              {{- if eq .Values.authenticationMethod "External" }}
-              xmllint --shell /config/config.xml << EOF
-              cd /Config/AuthenticationMethod
-              set External
-              save
-              EOF
-              {{- end }}
-
-              xmllint --shell /config/config.xml << EOF
-              cd /Config/UrlBase
-              set {{ .Values.baseUrl }}
-              save
-              EOF
+              yq -i '.general.base_url = "{{ .Values.baseUrl }}"' /config/config/config.yaml
           volumeMounts:
             - mountPath: /config
               name: config

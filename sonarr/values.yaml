@@ -13,7 +13,7 @@ nameOverride: ""
 fullnameOverride: ""
 
 authenticationMethod: External
-baseUrl: "/sonarr"
+baseUrl: /sonarr
 
 serviceAccount:
   # Specifies whether a service account should be created
@@ -44,15 +44,10 @@ service:
 ingress:
   enabled: true
   className: public
-  annotations:
-    nginx.ingress.kubernetes.io/auth-type: basic
-    nginx.ingress.kubernetes.io/auth-secret: basic-auth
-    nginx.ingress.kubernetes.io/auth-realm: 'Authentication Required'
+  annotations: {} # If baseUrl is changed the appropriate annotations will be added automatically.
   hosts:
     - host: media.local
-      paths:
-        - path: /sonarr
-          pathType: Prefix
+      # Paths are managed using the value "baseUrl".
   tls: []
   #  - secretName: chart-example-tls
   #    hosts:

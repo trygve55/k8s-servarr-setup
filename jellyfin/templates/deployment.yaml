@@ -50,6 +50,43 @@ spec:
               name: data
             - mountPath: /config
               name: config
+      initContainers:
+        - name: config
+          image: pipelinecomponents/xmllint:0.8.1
+          securityContext:
+            runAsUser: 1000 # Find a better way to preserve file ownership of config.xml.
+            runAsGroup: 1000
+          command:
+            - /bin/sh
+            - -c
+            - |
+              if ! [ -e "/config/network.xml" ] ; then
+                  echo "No network.xml found, creating minimal config."
+                  cat <<EOF >/config/network.xml
+              <Config>
+                <BindAddress>*</BindAddress>
+                <RequireHttps>false</RequireHttps>
+                <InternalHttpPort>8096</InternalHttpPort>
+                <InternalHttpsPort>8920</InternalHttpsPort>
+                <PublicHttpPort>8096</PublicHttpPort>
+                <PublicHttpsPort>8920</PublicHttpsPort>
+                <BaseUrl>/</BaseUrl>
+              </Config>
+              EOF
+              fi
+
+              xmllint --shell /config/network.xml << EOF
+              cd /NetworkConfiguration/BaseUrl
+              {{- if eq $.Values.baseUrl "/" }}
+              set /
+              {{- else }}
+              set {{ .Values.baseUrl | trimPrefix "/"}}
+              {{- end }}
+              save
+              EOF
+          volumeMounts:
+            - mountPath: /config
+              name: config
       volumes:
         {{- if eq .Values.storage.data.type "hostPath" }}
         - name: data

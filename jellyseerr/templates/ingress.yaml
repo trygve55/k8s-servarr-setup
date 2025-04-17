@@ -22,7 +22,7 @@ metadata:
     {{- with .Values.ingress.annotations }}
     {{- toYaml . | nindent 4 }}
     {{- end }}
-    {{- if ne .Values.urlBase "/" }}
+    {{- if ne .Values.baseUrl "/" }}
     nginx.ingress.kubernetes.io/use-regex: "true"
     nginx.ingress.kubernetes.io/rewrite-target: /$1
     nginx.ingress.kubernetes.io/proxy-redirect-from: /
@@ -74,7 +74,7 @@ spec:
     - host: {{ .host | quote }}
       http:
         paths:
-          {{- if eq $.Values.urlBase "/" }}
+          {{- if eq $.Values.baseUrl "/" }}
           - path: /
             pathType: Prefix
           {{- else }}
@@ -92,7 +92,7 @@ spec:
               servicePort: {{ $svcPort }}
               {{- end }}
           {{- range .paths }}
-            {{ fail "The ingress paths are managed using the \"urlBase\" value. Please use this instead." }}
+            {{ fail "The ingress paths are managed using the \"baseUrl\" value. Please use this instead." }}
           {{- end }}
     {{- end }}
 {{- end }}

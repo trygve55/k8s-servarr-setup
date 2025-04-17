@@ -41,11 +41,8 @@ spec:
     - host: {{ .host | quote }}
       http:
         paths:
-          {{- range .paths }}
-          - path: {{ .path }}
-            {{- if and .pathType (semverCompare ">=1.18-0" $.Capabilities.KubeVersion.GitVersion) }}
-            pathType: {{ .pathType }}
-            {{- end }}
+          - path: {{ $.Values.baseUrl }}
+            pathType: Prefix
             backend:
               {{- if semverCompare ">=1.19-0" $.Capabilities.KubeVersion.GitVersion }}
               service:
@@ -56,6 +53,8 @@ spec:
               serviceName: {{ $fullName }}
               servicePort: {{ $svcPort }}
               {{- end }}
+          {{- range .paths }}
+            {{ fail "The ingress paths are managed using the \"baseUrl\" value. Please use this instead." }}
           {{- end }}
     {{- end }}
 {{- end }}

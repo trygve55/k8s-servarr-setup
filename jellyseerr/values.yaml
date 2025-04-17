@@ -12,7 +12,7 @@ imagePullSecrets: []
 nameOverride: ""
 fullnameOverride: ""
 
-urlBase: "/jellyseerr"
+baseUrl: /jellyseerr
 
 serviceAccount:
   # Specifies whether a service account should be created
@@ -43,10 +43,10 @@ service:
 ingress:
   enabled: true
   className: public
-  annotations: {} # If urlBase is changed the appropriate annotations will be added automatically.
+  annotations: {} # If baseUrl is changed the appropriate annotations will be added automatically.
   hosts:
     - host: media.local
-      # Paths are managed using the value "urlBase".
+      # Paths are managed using the value "baseUrl".
   tls: []
   #  - secretName: chart-example-tls
   #    hosts:

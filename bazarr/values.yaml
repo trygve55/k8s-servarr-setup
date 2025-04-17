@@ -12,8 +12,7 @@ imagePullSecrets: []
 nameOverride: ""
 fullnameOverride: ""
 
-authenticationMethod: External
-baseUrl: "/bazarr"
+baseUrl: /bazarr
 
 serviceAccount:
   # Specifies whether a service account should be created
@@ -44,15 +43,10 @@ service:
 ingress:
   enabled: true
   className: public
-  annotations:
-    nginx.ingress.kubernetes.io/auth-type: basic
-    nginx.ingress.kubernetes.io/auth-secret: basic-auth
-    nginx.ingress.kubernetes.io/auth-realm: 'Authentication Required'
+  annotations: {} # If baseUrl is changed the appropriate annotations will be added automatically.
   hosts:
     - host: media.local
-      paths:
-        - path: /bazarr
-          pathType: Prefix
+      # Paths are managed using the value "baseUrl".
   tls: []
   #  - secretName: chart-example-tls
   #    hosts:
@@ -65,9 +59,6 @@ storage:
   config:
     type: hostPath
     path: /home/trygve/k8s-data/config/bazarr
-
-config:
-  AuthenticationMethod: External
 
 resources: {}
   # We usually recommend not to specify default resources and to leave this as a conscious
