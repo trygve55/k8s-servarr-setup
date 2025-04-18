@@ -3,7 +3,7 @@ ingress:
   className: public
   annotations:
     kubernetes.io/ingress.class: public
-  hosts: [media.local]
+  hosts: [admin.local]
 
 parameters:
   htmlTitle: "Serverr admin pages"

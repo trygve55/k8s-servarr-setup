@@ -1,10 +1,4 @@
 # helm-charts
-
-```shell
-helm repo add k8s-at-home https://k8s-at-home.com/charts/
-helm install qbittorrent k8s-at-home/qbittorrent --version 13.4.2
-```
-
 ```shell
 kubectl create namespace media
 ```
@@ -27,35 +21,68 @@ mkdir /mount/hdd0/data/media/Music
 mkdir /mount/hdd0/data/Downloads
 
 mkdir -p /home/trygve/k8s-data/config/qbittorrent
-helm install qbittorrent arch-qbittorrentvpn/ -n media
+helm install qbittorrent trygve55/arch-qbittorrentvpn/ \
+  --namespace media \
+  --set baseUrl="/" \
+  --set ingress.enabled=true \
+  --set ingress.hosts[0].host="qbittorrent.local"
 
 mkdir -p /home/trygve/k8s-data/config/sonarr
-helm install sonarr sonarr -n media
+helm install sonarr trygve55/sonarr -n media \
+  --namespace media \
+  --set baseUrl="/" \
+  --set ingress.enabled=true \
+  --set ingress.hosts[0].host="sonarr.local" \
+  --values ingress-basic-auth-values.yaml
 
 mkdir -p /home/trygve/k8s-data/config/radarr
-helm install radarr radarr -n media
+helm install radarr trygve55/radarr -n media \
+  --namespace media \
+  --set baseUrl="/" \
+  --set ingress.enabled=true \
+  --set ingress.hosts[0].host="radarr.local" \
+  --values ingress-basic-auth-values.yaml
 
 helm repo add k8s-home-lab https://k8s-home-lab.github.io/helm-charts/
 helm repo update
 helm install flaresolverr k8s-home-lab/flaresolverr -n media
 
 mkdir -p /home/trygve/k8s-data/config/prowlarr
-helm install prowlarr prowlarr -n media
+helm install prowlarr trygve55/prowlarr -n media \
+  --namespace media \
+  --set baseUrl="/" \
+  --set ingress.enabled=true \
+  --set ingress.hosts[0].host="prowlarr.local" \
+  --values ingress-basic-auth-values.yaml
 
 mkdir -p /home/trygve/k8s-data/config/bazarr
-helm install bazarr bazarr -n media
+helm install bazarr trygve55/bazarr -n media \
+  --namespace media \
+  --set baseUrl="/" \
+  --set ingress.enabled=true \
+  --set ingress.hosts[0].host="bazarr.local" \
+  --values ingress-basic-auth-values.yaml
 
 mkdir -p /home/trygve/k8s-data/config/jellyfin
-helm install jellyfin jellyfin -n media
+helm install jellyfin trygve55/jellyfin -n media \
+  --namespace media \
+  --set baseUrl="/" \
+  --set ingress.enabled=true \
+  --set ingress.hosts[0].host="jellyfin.local"
 
 mkdir -p /home/trygve/k8s-data/config/jellyseerr
-helm install jellyseerr jellyseerr -n media
+helm install jellyseerr trygve55/jellyseerr -n media \
+  --namespace media \
+  --set baseUrl="/" \
+  --set ingress.enabled=true \
+  --set ingress.hosts[0].host="jellyseerr.local"
 
 helm repo add byjg https://opensource.byjg.com/helm
 helm repo update byjg    
 helm upgrade --install staticpage byjg/static-httpserver \
+  --namespace media \
   --values static-page-values.yaml \
-  --namespace media
+  --values ingress-basic-auth-values.yaml
 ```
 
 ### Sonarr setup:
