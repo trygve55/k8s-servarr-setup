@@ -56,6 +56,24 @@ helm install qbittorrent trygve55/arch-qbittorrentvpn \
   --set ingress.hosts[0].host="qbittorrent.local" \
   --values ingress-basic-auth-values.yaml
 ```
+
+#### VPN (OpenVPN)
+First locate and download the OpenVPN configurations files (*.ovpn) from your VPN provider.
+
+Create a secret containing your VPN credentials and configuration.
+```shell
+kubectl create secret generic openvpn-credentials \
+    --namespace media \
+    --from-literal=username="<your vpn username>" \
+    --from-literal=password="<your vpn password>" \
+    --from-file=openvpn-config.ovpn="<your *.ovpn configuration file>"
+```
+Add the following to the qbittorrent helm install command:
+```shell
+  --set vpn.enabled=true \
+  --set vpn.protocol=openvpn \
+  --set vpn.secret=openvpn-credentials \
+```
 ### Sonarr
 ```shell
 mkdir -p /home/trygve/k8s-data/config/sonarr
