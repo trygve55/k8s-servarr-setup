@@ -206,6 +206,32 @@ helm install jellyfin trygve55/jellyfin -n media \
   --set ingress.hosts[0].host="jellyfin.local"
 ```
 
+#### Hardware transcoding
+If you have an Intel GPU or a iGPU you can enable hardware transcoding to speed up the process. Add the following to your command to enable this.
+
+Make sure at least one renderD* device exists in /dev/dri. Otherwise upgrade your kernel or enable the iGPU in the BIOS.
+```shell
+ls -l /dev/dri
+```
+
+Then we need to query the id of the render group on the host system:
+```shell  
+getent group render | cut -d: -f3
+```
+Replace `105` with the id returned from the previous command.
+```shell
+--set hardwareAcceleration.intel.enabled=true \ 
+--set hardwareAcceleration.intel.renderGroupId=105 \
+```
+You also need to enable this in the Jellyfin settings after the setup is done. <br>
+https://jellyfin.org/docs/general/post-install/transcoding/hardware-acceleration/intel
+
+##### Multi GPU systems
+If you have multiple GPUs you need to select the correct rendering device. Replace `renderD128` with your rendering device.
+```shell
+--set hardwareAcceleration.intel.renderDevicePath="/dev/dri/renderD128" \
+```
+
 #### Jellyfin setup
 Create admin user.
 
