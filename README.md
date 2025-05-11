@@ -77,7 +77,7 @@ Add the following to the qbittorrent helm install command:
 ### Sonarr
 ```shell
 mkdir -p /home/trygve/k8s-data/config/sonarr
-helm install sonarr trygve55/sonarr -n media \
+helm install sonarr trygve55/sonarr \
   --namespace media \
   --set baseUrl="/" \
   --set clusterIssuer="letsencrypt-prod" \
@@ -102,7 +102,7 @@ Add `/data/media/Tv-Series/`
 ### Radarr
 ```shell
 mkdir -p /home/trygve/k8s-data/config/radarr
-helm install radarr trygve55/radarr -n media \
+helm install radarr trygve55/radarr \
   --namespace media \
   --set baseUrl="/" \
   --set clusterIssuer="letsencrypt-prod" \
@@ -120,6 +120,60 @@ Host: `qbittorrent-arch-qbittorrentvpn`
 Settings -> Media Management -> Root Folders <br>
 Add `/data/media/Movies/`
 
+### Mylar3
+```shell
+mkdir -p /mount/hdd0/data/media/Books/Comics
+mkdir -p /home/trygve/k8s-data/config/mylar3
+helm install mylar3 trygve55/mylar3 \
+--namespace media \
+--set baseUrl="/" \
+--set ingress.enabled=true \
+--set ingress.hosts[0].host="mylar3.local" \
+--values ingress-basic-auth-values.yaml
+```
+
+#### Mylar3 setup
+Create a user at https://comicvine.gamespot.com/ and login. <br>
+Go to https://comicvine.gamespot.com/api/ and copy your Comic Vine API key.
+
+Settings -> Web Interface <br>
+ComicVine API Key: `The value from above` <br>
+Comic Location Path: `/data/media/Books/Comics` <br>
+Mylar API key: Press Generate <br>
+Save settings
+
+Settings -> Download settings -> Torrents <br>
+Use Torrents: Yes <br>
+Select qBittorrent <br>
+qBittorrent Host:Port: `http://qbittorrent-arch-qbittorrentvpn:8080` <br>
+qBittorrent Label: `mylar3` <br>
+qBittorrent Folder: `/data/downloads`
+
+Settings -> Search providers <br>
+Torrents: enabled <br>
+Enable Torznab: enabled
+
+### Readarr
+```shell
+mkdir -p /mount/hdd0/data/media/Books/Books
+mkdir -p /home/trygve/k8s-data/config/readarr
+helm install readarr trygve55/readarr \
+--namespace media \
+--set baseUrl="/" \
+--set ingress.enabled=true \
+--set ingress.hosts[0].host="readarr.local" \
+--values ingress-basic-auth-values.yaml
+```
+
+#### Readarr setup
+Settings -> Download Clients <br>
+Add download client: <br>
+Name: `qBittorent` <br>
+Host: `qbittorrent-arch-qbittorrentvpn`
+
+Settings -> Media Management -> Root Folders <br>
+Add `/data/media/Books/Books`
+
 #### FlareSolverr
 Flaresolverr is only required for specific indexers.
 ```shell
@@ -129,7 +183,7 @@ helm install flaresolverr k8s-home-lab/flaresolverr -n media
 #### Prowlarr
 ```shell
 mkdir -p /home/trygve/k8s-data/config/prowlarr
-helm install prowlarr trygve55/prowlarr -n media \
+helm install prowlarr trygve55/prowlarr \
   --namespace media \
   --set baseUrl="/" \
   --set clusterIssuer="letsencrypt-prod" \
@@ -149,20 +203,30 @@ Add indexers <br>
 Some indexers will indicate that they need FlareSolverr, add the `flare` tag to those indexers.
 
 Settings -> Apps
-Add sonarr: <br>
+Add Sonarr: <br>
 Prowlarr Server: `http://prowlarr:9696` <br>
 Sonarr Server: `http://sonarr:8989` <br>
 API Key: Copy API key from Sonarr interface
 
-Add radarr: <br>
+Add Radarr: <br>
 Prowlarr Server: `http://prowlarr:9696` <br>
 Radarr Server: `http://radarr:7878` <br>
 API Key: Copy API key from Radarr interface
 
+Add Readarr: <br>
+Prowlarr Server: `http://prowlarr:9696` <br>
+Readarr Server: `http://readarr:8787` <br>
+API Key: Copy API key from Readarr interface
+
+Add Mylar3: <br>
+Prowlarr Server: `http://prowlarr:9696` <br>
+Mylar3 Server: `http://mylar3:8090` <br>
+API Key: Copy API key from Readarr interface
+
 ### Bazarr
 ```shell
 mkdir -p /home/trygve/k8s-data/config/bazarr
-helm install bazarr trygve55/bazarr -n media \
+helm install bazarr trygve55/bazarr \
   --namespace media \
   --set baseUrl="/" \
   --set clusterIssuer="letsencrypt-prod" \
@@ -195,6 +259,7 @@ API Key: Copy API key from Sonarr interface
 Settings -> Radarr <br>
 Address: `radarr` <br>
 API Key: Copy API key from Radarr interface
+
 ### Jellyfin
 ```shell
 mkdir -p /home/trygve/k8s-data/config/jellyfin
